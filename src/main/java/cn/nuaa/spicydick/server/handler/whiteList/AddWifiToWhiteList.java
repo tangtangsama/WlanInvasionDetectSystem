@@ -28,7 +28,9 @@ public class AddWifiToWhiteList extends RequestHandler {
         List<ClientInfo> clientInfoList = new ArrayList<ClientInfo>();
         try {
             Gson gson = new Gson();
+            // json接受request返回值
             String json = request.getParams().getValue("clientInfoList").toString();
+            // fromJson实现从json相关对象到JAVA实体的转换，TypeToken是gson提供的数据类型转换器
             clientInfoList = gson.fromJson(json, new TypeToken<List<ClientInfo>>() {
             }.getType());
         } catch (Exception e) {
@@ -37,11 +39,12 @@ public class AddWifiToWhiteList extends RequestHandler {
             cn.nuaa.spicydick.server.handler.usr.Login.logger
                     .error((Object) String.format("user:%s exception:%s", "非法参数"));
             return;
-
         }
+
         JsonObject result = new JsonObject();
         List<singleResult> addWifiToWhiteListResultList = new ArrayList<singleResult>();
 
+        // 将客户端信息使用迭代器输出
         for (Iterator it = clientInfoList.iterator(); it.hasNext(); ) {
             ClientInfo clientInfo = (ClientInfo) it.next();
 
@@ -54,20 +57,20 @@ public class AddWifiToWhiteList extends RequestHandler {
 
             if (!formDetect(clientBssid, "MAC_RegEx") || !formDetect(remark, 1, 20) ||
                     !formDetect(manager, 1, 20) || !formDetect(contact, 6, 12)) {
-                routingContext.response()
-                        .end(ResponseFactory.error(-3, ErrorCode.INVALID_PARAMETERS, "非法参数").toString());
-                cn.nuaa.spicydick.server.handler.usr.Login.logger
-                        .error((Object) String.format("user:%s exception:%s", "非法参数"));
+                routingContext.response().end(ResponseFactory.error(-3, ErrorCode.INVALID_PARAMETERS, "非法参数").toString());
+                cn.nuaa.spicydick.server.handler.usr.Login.logger.error((Object) String.format("user:%s exception:%s", "非法参数"));
                 return;
             }
 
+
             //
 
+
+            // 返回成功结果，输出单条记录信息
             singleResult Info = new singleResult();
             Info.setSingCode(0);
             Info.setSingleMessage("aa");
             addWifiToWhiteListResultList.add(Info);
-
         }
         result.put("resultList", addWifiToWhiteListResultList);
         routingContext.response().end(ResponseFactory.success(request, result).toString());
