@@ -1,4 +1,4 @@
-package usr;
+package WifiDetection;
 
 import cn.nuaa.spicydick.server.util.IniUtil;
 import io.vertx.core.Vertx;
@@ -7,27 +7,29 @@ import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.client.HttpResponse;
 import io.vertx.ext.web.client.WebClient;
 
-
-public class LoginTest {
+public class GetWifiSignalsTest {
     public static void main(final String[] args) {
         IniUtil.changeMode(IniUtil.LOCAL_DEBUG_MODE);
-//        IniUtil.changeMode(IniUtil.PRODUCT_MODE);
 
+        //创建vertx实例，建立虚拟客户端
         Vertx vertx = Vertx.vertx();
         WebClient client = WebClient.create(vertx);
 
-        JsonObject params = new JsonObject();
-        params.put("username", "test");
-        params.put("passwd", "123");
+        //构建虚拟报文参数params
+        JsonObject params= new JsonObject();
+        params.put("wifiBssid","FF-FF-FF-FF-FF-FF");
 
-        JsonObject form = new JsonObject();
-        form.put("version", 1);
-        form.put("method", "user.login");
-        form.put("params", params);
-        form.put("id", 1);
+        //创建报文json
+        JsonObject request = new JsonObject();
+        request.put("version",1.0);
+        request.put("method","wifiDetection.getWifiSignals");
+        request.put("params",params);
+        request.put("token","");
+        request.put("id",1);
+
         client
                 .post(IniUtil.getInstance().getHTTPServerPort(), IniUtil.getInstance().getServerHostName(), "/")
-                .sendJsonObject(form, ar -> {
+                .sendJsonObject(request, ar -> {
                     if (ar.succeeded()) {
 
                         HttpResponse<Buffer> response = ar.result();
@@ -41,8 +43,5 @@ public class LoginTest {
                     }
                     vertx.close();
                 });
-
-
     }
-
 }

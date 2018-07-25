@@ -35,11 +35,11 @@ public class GetWifiEventList extends RequestHandler {
         int page = request.getParams().getValue("page") != null ? StringToInt(request.getParams().getValue("page").toString()) : 1;
 
         String startTime = request.getParams().getValue("startTime") != null ? request.getParams().getValue("startTime").toString() : "1970-01-01 00:00:00";
-        String endTime = request.getParams().getValue("endTime") != null ? request.getParams().getValue("endTime").toString() : "2070-01-01 00:00:";
+        String endTime = request.getParams().getValue("endTime") != null ? request.getParams().getValue("endTime").toString() : "2070-01-01 00:00:00";
 
         //表单验证
-        if (!formDetect(wifiBssid, "MAC_RegEx") || !formDetect(page, 1, 100) ||
-                !formDetect(startTime, "DATE_RegEx") || !formDetect(endTime, "DATE_RegEx")) {
+        if (!formDetect(wifiBssid, "MAC_RegExpr") || !formDetect(page, 1, 100) ||
+                !formDetect(startTime, "DATE_RegExpr") || !formDetect(endTime, "DATE_RegExpr")) {
             routingContext.response().end(ResponseFactory.error(-3,ErrorCode.INVALID_PARAMETERS,"非法参数").toString());
             Login.logger.error((Object)String .format("user:%s exception:%s","非法参数"));
 
